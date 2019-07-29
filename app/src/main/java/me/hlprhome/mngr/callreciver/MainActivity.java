@@ -28,28 +28,28 @@ public class MainActivity extends AppCompatActivity {
 
         tvResults = (TextView) findViewById(R.id.tvResults);
 
-        if (getApplicationContext().checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission has not been granted, therefore prompt the user to grant permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_PHONE_STATE},
-                    MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
-        }
-
-        if (getApplicationContext().checkSelfPermission(Manifest.permission.PROCESS_OUTGOING_CALLS)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission has not been granted, therefore prompt the user to grant permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.PROCESS_OUTGOING_CALLS},
-                    MY_PERMISSIONS_REQUEST_PROCESS_OUTGOING_CALLS);
-        }
-        if (getApplicationContext().checkSelfPermission(Manifest.permission.INTERNET)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission has not been granted, therefore prompt the user to grant permission
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.INTERNET},
-                    MY_PERMISSIONS_REQUEST_PROCESS_INTERNET);
-        }
+//        if (getApplicationContext().checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            // Permission has not been granted, therefore prompt the user to grant permission
+//            ActivityCompat.requestPermissions(this,
+//                    new String[]{Manifest.permission.READ_PHONE_STATE},
+//                    MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+//        }
+//
+//        if (getApplicationContext().checkSelfPermission(Manifest.permission.PROCESS_OUTGOING_CALLS)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            // Permission has not been granted, therefore prompt the user to grant permission
+//            ActivityCompat.requestPermissions(this,
+//                    new String[]{Manifest.permission.PROCESS_OUTGOING_CALLS},
+//                    MY_PERMISSIONS_REQUEST_PROCESS_OUTGOING_CALLS);
+//        }
+//        if (getApplicationContext().checkSelfPermission(Manifest.permission.INTERNET)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            // Permission has not been granted, therefore prompt the user to grant permission
+//            ActivityCompat.requestPermissions(this,
+//                    new String[]{Manifest.permission.INTERNET},
+//                    MY_PERMISSIONS_REQUEST_PROCESS_INTERNET);
+//        }
     }
 
 }

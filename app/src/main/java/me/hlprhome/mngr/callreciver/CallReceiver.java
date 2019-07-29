@@ -4,6 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatCallback;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.TextView;
@@ -24,7 +27,7 @@ import java.util.Date;
 
 import static android.content.ContentValues.TAG;
 
-public class CallReceiver extends PhonecallReceiver {
+public class CallReceiver extends PhonecallReceiver{
 
     TextView tvResults;
 
@@ -96,6 +99,7 @@ public class CallReceiver extends PhonecallReceiver {
                 .post(formBody)
                 .build();
 
+
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -108,12 +112,15 @@ public class CallReceiver extends PhonecallReceiver {
                     final String myResponse = response.body().string();
 
                     Log.d("Call ******mssd","Number: " + myResponse +" - "+ "Done");
-                    
+
 
 
                 }
             }
         });
+//        String textView = number +" - "+ start;
+//        Intent intent = new Intent(CallReceiver.this, MainActivity.class);
+
 
 
     }
