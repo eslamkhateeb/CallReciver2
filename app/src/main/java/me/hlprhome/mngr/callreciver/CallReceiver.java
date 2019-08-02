@@ -1,16 +1,15 @@
 package me.hlprhome.mngr.callreciver;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatCallback;
-import android.telephony.TelephonyManager;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.text.ParseException;
+
 import android.util.Log;
+import android.widget.RemoteViews;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -25,7 +24,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static android.content.ContentValues.TAG;
+
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class CallReceiver extends PhonecallReceiver{
 
@@ -82,12 +83,39 @@ public class CallReceiver extends PhonecallReceiver{
         String dateString = dateformatter.format(start);
         String timeString = timeformatter.format(start);
 
+
+        //Check in or out
+        String check = "Check In";
+        try {
+        Date checkTime = timeformatter.parse(timeString);
+        Date midday = timeformatter.parse("11:00");
+            if (checkTime.compareTo(midday)>0){
+                check = "Check Out";
+            }
+        } catch (ParseException e){
+            // Exception handling goes here
+            e.printStackTrace();
+        }
+
+
+        //Save to file
+        try{
+            FileOutputStream file = ctx.openFileOutput("Data.txt",MODE_PRIVATE);
+            OutputStreamWriter outputfile = new OutputStreamWriter(file);
+            outputfile.write(number + "," + check + "," + timeString + "," + dateString +"\n");
+            outputfile.flush();
+            outputfile.close();
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
         //send HTTP
         OkHttpClient client = new OkHttpClient();
 
         RequestBody formBody = new FormBody.Builder()
                 .add("entry.442378818", number) //number
-                .add("entry.375324555", "Missed Call") //call type
+                .add("entry.375324555", check) //call type
                 .add("entry.775427152", timeString) //call Duration
                 .add("entry.1136970274", dateString) //call Date
                 .build();
@@ -98,6 +126,9 @@ public class CallReceiver extends PhonecallReceiver{
                 .url(url + "/formResponse")
                 .post(formBody)
                 .build();
+
+        RemoteViews view = new RemoteViews("me.hlprhome.mngr.callreciver",R.layout.activity_main);
+        view.setTextViewText(R.id.tvResults, number +" - "+ start);
 
 
         client.newCall(request).enqueue(new Callback() {
@@ -115,13 +146,10 @@ public class CallReceiver extends PhonecallReceiver{
 
 
 
+
                 }
             }
         });
-//        String textView = number +" - "+ start;
-//        Intent intent = new Intent(CallReceiver.this, MainActivity.class);
-
-
 
     }
 
