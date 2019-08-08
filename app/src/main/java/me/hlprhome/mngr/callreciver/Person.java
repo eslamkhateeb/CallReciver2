@@ -2,27 +2,23 @@ package me.hlprhome.mngr.callreciver;
 
 public class Person {
 
-    private String name;
-    private String surname;
+    private String mNumber;
+    private String mCheck;
 
-    public Person(String name, String surname) {
-        this.name = name;
-        this.surname = surname;
-    }
 
     public String getName() {
-        return name;
+        return mNumber;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.mNumber = name;
     }
 
     public String getSurname() {
-        return surname;
+        return mCheck;
     }
 
     public void setSurname(String surname) {
-        this.surname = surname;
+        this.mCheck = surname;
     }
 }

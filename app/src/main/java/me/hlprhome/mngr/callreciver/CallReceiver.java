@@ -2,14 +2,15 @@ package me.hlprhome.mngr.callreciver;
 
 import android.content.Context;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.text.ParseException;
 
 import android.util.Log;
-import android.widget.RemoteViews;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -18,6 +19,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.MediaType;
+
 
 
 import java.io.IOException;
@@ -28,9 +31,12 @@ import java.util.Date;
 
 import static android.content.Context.MODE_PRIVATE;
 
+
+
 public class CallReceiver extends PhonecallReceiver{
 
     TextView tvResults;
+
 
 
 
@@ -110,6 +116,50 @@ public class CallReceiver extends PhonecallReceiver{
             e.printStackTrace();
         }
 
+
+
+
+        //Send to Slack
+
+        OkHttpClient slackClient = new OkHttpClient();
+
+        JSONObject json = new JSONObject();
+        try{
+        json.put("text", number +" | " + check +" | "+ start );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        String slackUrl = "https://hooks.slack.com/services/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";
+
+        String jsonString = json.toString();
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonString);
+
+        Request slackRequest = new Request.Builder()
+                .header("X-Client-Type", "Android")
+                .url(slackUrl)
+                .post(body)
+                .build();
+
+        slackClient.newCall(slackRequest).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("Send To Slack","Error: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    final String myResponse = response.body().string();
+
+                    Log.d("Send To Slack","Number: " + myResponse +" - "+ "Done");
+
+                }
+            }
+        });
+
+
         //send HTTP
         OkHttpClient client = new OkHttpClient();
 
@@ -127,14 +177,10 @@ public class CallReceiver extends PhonecallReceiver{
                 .post(formBody)
                 .build();
 
-        RemoteViews view = new RemoteViews("me.hlprhome.mngr.callreciver",R.layout.activity_main);
-        view.setTextViewText(R.id.tvResults, number +" - "+ start);
-
-
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
+                Log.d("Send To Sheet","Error: " + e.getMessage());
             }
 
             @Override
@@ -142,7 +188,7 @@ public class CallReceiver extends PhonecallReceiver{
                 if (response.isSuccessful()) {
                     final String myResponse = response.body().string();
 
-                    Log.d("Call ******mssd","Number: " + myResponse +" - "+ "Done");
+                    Log.d("Send To Sheet", myResponse );
 
 
 
